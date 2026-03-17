@@ -675,7 +675,6 @@ function renderResult() {
       <p class="cta-copy">あなたの診断結果をもとに<br />土井千春が"今の状態に合ったアドバイス"をお届けします</p>
       <div class="cta-buttons">
         <button type="button" class="action-btn" id="advice-btn" ${appState.adviceRequested ? "disabled" : ""}>${adviceButtonText}</button>
-        <button type="button" class="ghost-btn" id="restart-btn">トップへ戻る</button>
       </div>
     </section>
   `;
@@ -687,12 +686,6 @@ function renderResult() {
     appState.adviceRequested = true;
     renderResult();
     showToast();
-  });
-
-  resultEl.querySelector("#restart-btn").addEventListener("click", () => {
-    resetAll();
-    renderIntro();
-    setScreen("intro");
   });
 }
 

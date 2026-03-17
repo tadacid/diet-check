@@ -109,8 +109,7 @@ input:focus {
 .choice-btn,
 .nav-btn,
 .action-btn,
-.primary-btn,
-.ghost-btn {
+.primary-btn {
   border: 1px solid var(--line);
   border-radius: 12px;
   background: #fff;
@@ -457,15 +456,10 @@ input:focus {
   gap: 10px;
 }
 
-.ghost-btn,
 .action-btn {
   width: 100%;
   min-height: 48px;
   font-weight: 700;
-}
-
-.ghost-btn {
-  background: #fff;
 }
 
 .toast {
