@@ -184,6 +184,8 @@ const TYPE_CONFIG = [
   },
 ];
 
+const NEUTRAL_MAIN_TYPE = "はっきりした偏りは見られません";
+
 const geneQuestions = questions.filter((item) => item.type === "genetic");
 const foundationQuestions = questions.filter((item) => item.type === "foundation");
 const typeLabels = TYPE_CONFIG.map((item) => item.title);
@@ -519,6 +521,7 @@ function buildReport() {
   const answerCounts = Object.fromEntries(
     questions.map((item, idx) => [item.id, appState.answers[idx].size])
   );
+  const totalSelectedCount = Object.values(answerCounts).reduce((sum, count) => sum + count, 0);
   const foundationResults = foundationQuestions.map((item, idx) => {
     const answerIndex = idx + geneQuestions.length;
     const score = appState.answers[answerIndex].size;
@@ -555,12 +558,13 @@ function buildReport() {
   });
 
   const status = evaluateFoundationStatus(foundationResults, totalWeightedScore);
+  const hasClearTypeSignal = totalSelectedCount > 0 && typeResults[mainTypeIndex].rawScore > 0;
 
   return {
     userLine: `${appState.form.name.trim()} 様 (${appState.form.age}歳 / ${appState.form.gender})`,
     typeResults,
     bodyScores,
-    mainType: TYPE_CONFIG[mainTypeIndex].title,
+    mainType: hasClearTypeSignal ? TYPE_CONFIG[mainTypeIndex].title : NEUTRAL_MAIN_TYPE,
     statusMessage: status.statusMessage,
     statusClass: status.statusClass,
     statusIcon: status.statusIcon,
