@@ -2,8 +2,8 @@ const questions = [
   {
     id: "carb",
     type: "genetic",
-    section: "Step 1: 遺伝子タイプ傾向",
-    title: "糖質太りタイプ 🍚",
+    section: "Step 1: 体質タイプ傾向",
+    title: "糖質太りタイプ",
     choices: [
       "パン・麺・丼・甘い物がやめられない",
       "食後に眠くなる・だるくなる",
@@ -15,8 +15,8 @@ const questions = [
   {
     id: "lipid",
     type: "genetic",
-    section: "Step 1: 遺伝子タイプ傾向",
-    title: "脂質太りタイプ 🧈",
+    section: "Step 1: 体質タイプ傾向",
+    title: "脂質太りタイプ",
     choices: [
       "揚げ物やこってり系で胃もたれしやすい",
       "油ものを食べるとお腹を下しやすい",
@@ -28,8 +28,8 @@ const questions = [
   {
     id: "metabolism_low",
     type: "genetic",
-    section: "Step 1: 遺伝子タイプ傾向",
-    title: "筋肉不足・代謝低下タイプ 💪",
+    section: "Step 1: 体質タイプ傾向",
+    title: "代謝太りタイプ",
     choices: [
       "運動習慣がほとんどない",
       "少し動くだけで疲れやすい",
@@ -136,9 +136,57 @@ const RESULT_CONFIG = {
   },
 };
 
+const TYPE_CONFIG = [
+  {
+    id: "carb",
+    title: "糖質太りタイプ",
+    weights: {
+      carb: 1.4,
+      glucose: 1.2,
+      iron: 0.4,
+    },
+  },
+  {
+    id: "lipid",
+    title: "脂質太りタイプ",
+    weights: {
+      lipid: 1.5,
+      digestion: 1,
+      metabolism_body: 0.3,
+    },
+  },
+  {
+    id: "metabolism",
+    title: "代謝太りタイプ",
+    weights: {
+      metabolism_low: 1.5,
+      metabolism_body: 1.2,
+      protein: 0.8,
+    },
+  },
+  {
+    id: "swelling",
+    title: "むくみ太りタイプ",
+    weights: {
+      metabolism_body: 1.3,
+      digestion: 0.8,
+      iron: 0.7,
+    },
+  },
+  {
+    id: "stress",
+    title: "ストレス太りタイプ",
+    weights: {
+      fatigue: 1.4,
+      glucose: 1,
+      digestion: 0.4,
+    },
+  },
+];
+
 const geneQuestions = questions.filter((item) => item.type === "genetic");
 const foundationQuestions = questions.filter((item) => item.type === "foundation");
-const geneLabels = geneQuestions.map((item) => item.title);
+const typeLabels = TYPE_CONFIG.map((item) => item.title);
 const bodyLabels = foundationQuestions.map((item) => item.title);
 
 const appState = {
@@ -468,7 +516,9 @@ function evaluateFoundationStatus(foundationResults, totalWeightedScore) {
 }
 
 function buildReport() {
-  const geneScores = geneQuestions.map((_, idx) => appState.answers[idx].size);
+  const answerCounts = Object.fromEntries(
+    questions.map((item, idx) => [item.id, appState.answers[idx].size])
+  );
   const foundationResults = foundationQuestions.map((item, idx) => {
     const answerIndex = idx + geneQuestions.length;
     const score = appState.answers[answerIndex].size;
@@ -484,9 +534,22 @@ function buildReport() {
   const bodyScores = foundationResults.map((item) => item.score);
   const totalWeightedScore = foundationResults.reduce((sum, item) => sum + item.weightedScore, 0);
 
+  const typeResults = TYPE_CONFIG.map((item) => {
+    const rawScore = Object.entries(item.weights).reduce((sum, [key, weight]) => {
+      return sum + (answerCounts[key] ?? 0) * weight;
+    }, 0);
+    const maxRawScore = Object.values(item.weights).reduce((sum, weight) => sum + weight * 5, 0);
+    return {
+      id: item.id,
+      title: item.title,
+      rawScore,
+      score: Math.max(0, Math.min(5, Math.round((rawScore / maxRawScore) * 5))),
+    };
+  });
+
   let mainTypeIndex = 0;
-  geneScores.forEach((score, idx) => {
-    if (score > geneScores[mainTypeIndex]) {
+  typeResults.forEach((item, idx) => {
+    if (item.rawScore > typeResults[mainTypeIndex].rawScore) {
       mainTypeIndex = idx;
     }
   });
@@ -495,9 +558,9 @@ function buildReport() {
 
   return {
     userLine: `${appState.form.name.trim()} 様 (${appState.form.age}歳 / ${appState.form.gender})`,
-    geneScores,
+    typeResults,
     bodyScores,
-    mainType: geneLabels[mainTypeIndex],
+    mainType: TYPE_CONFIG[mainTypeIndex].title,
     statusMessage: status.statusMessage,
     statusClass: status.statusClass,
     statusIcon: status.statusIcon,
@@ -589,12 +652,12 @@ function buildRadarSvg(labels, scores, maxScore) {
 function renderResult() {
   const report = appState.report;
 
-  const geneScoresMarkup = geneLabels
+  const typeScoresMarkup = typeLabels
     .map(
       (label, index) => `
       <div class="score-item">
         <span>${label}</span>
-        <strong>${report.geneScores[index]} / 5</strong>
+        <strong>${report.typeResults[index].score} / 5</strong>
       </div>
     `
     )
@@ -652,8 +715,8 @@ function renderResult() {
     </header>
 
     <section class="card">
-      <h3 class="card-title">🧬 遺伝子タイプ傾向</h3>
-      <div class="score-list">${geneScoresMarkup}</div>
+      <h3 class="card-title">🧬 体質タイプ傾向</h3>
+      <div class="score-list">${typeScoresMarkup}</div>
       <div class="main-type">
         <div class="main-type-label">あなたのメインタイプ</div>
         <div class="main-type-value">${report.mainType}</div>

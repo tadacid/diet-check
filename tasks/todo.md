@@ -16,3 +16,47 @@
 - 右下の「Made with Manus」リンクと関連スタイルを削除し、公開環境へ反映した
 - 結果画面の「トップへ戻る」ボタンを削除し、公開環境へ反映した
 - 体質バランス欄への画像追加案は見せ方が合わなかったため取り消し、画像未挿入の表示へ戻した
+
+## 2026-03-18 SSH接続整備
+
+- [x] 鍵ファイルの現在位置と接続設定の有無を確認する
+- [x] 接続設定のバックアップを作成する
+- [x] 鍵を `/Users/tada/.ssh/cgace001_xserver` へ移して見える範囲を安全な状態にする
+- [x] `/Users/tada/.ssh/config` に `cgace001-xserver` を追加する
+- [x] 接続確認を行い、結果を記録する
+
+## SSH接続整備レビュー
+
+- `/Users/tada/.ssh/config.bak-cgace001-20260318` を作成し、変更前の接続設定を退避した
+- 鍵を `/Users/tada/.ssh/cgace001_xserver` へ移し、自分だけ見られる状態に変更した
+- `ssh -F /Users/tada/.ssh/config -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=/tmp/diet-check-known_hosts -o BatchMode=yes cgace001-xserver 'echo CONNECTED && hostname && whoami'` で `CONNECTED`、`sv14659.xserver.jp`、`cgace001` を確認した
+
+## 2026-03-18 SSH接続スキル化
+
+- [x] スキル名と役割を決める
+- [x] スキルのひな形を作成する
+- [x] 接続手順を書いた `SKILL.md` を整える
+- [x] 一覧用の `agents/openai.yaml` を作成する
+- [x] 確認結果を記録する
+
+## SSH接続スキル化レビュー
+
+- `/Users/tada/.codex/skills/ssh-connect-cgace001/SKILL.md` を作成し、`ssh cgace001-xserver` で対話接続する専用手順を記述した
+- `/Users/tada/.codex/skills/ssh-connect-cgace001/agents/openai.yaml` を作成し、一覧用の表示名と説明を追加した
+- `python3 /Users/tada/.codex/skills/.system/skill-creator/scripts/quick_validate.py /Users/tada/.codex/skills/ssh-connect-cgace001` は `yaml` 部品不足で実行失敗したため、今回は手動確認で補った
+
+## 2026-03-18 5タイプ化
+
+- [x] 上段のタイプ表示を5種類へ変更する
+- [x] 判定ロジックを `糖質太り / 脂質太り / 代謝太り / むくみ太り / ストレス太り` に組み替える
+- [x] 質問結果から5タイプ点数が自然に出るように調整する
+- [x] ブラウザで結果画面の動作確認を行う
+- [x] レビューと学びを追記する
+
+## 5タイプ化レビュー
+
+- 上段の表示を `体質タイプ傾向` に変更し、`糖質太り / 脂質太り / 代謝太り / むくみ太り / ストレス太り` の5行表示へ変更した
+- 既存の9問は維持しつつ、回答結果を重みづけして5タイプへ集約する形に変更した
+- `node --check app.js` で構文エラーがないことを確認した
+- ローカル確認で、糖質寄りの回答では `糖質太りタイプ`、疲労と負担寄りの回答では `ストレス太りタイプ` がメイン表示になることを確認した
+- ブラウザ確認は `http://127.0.0.1:4173/index.html` を使って実施した
