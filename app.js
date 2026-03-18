@@ -160,17 +160,17 @@ const TYPE_CONFIG = [
     title: "代謝太りタイプ",
     weights: {
       metabolism_low: 1.5,
-      metabolism_body: 1.2,
-      protein: 0.8,
+      metabolism_body: 1.0,
+      protein: 0.6,
     },
   },
   {
     id: "swelling",
     title: "むくみ太りタイプ",
     weights: {
-      metabolism_body: 1.3,
+      metabolism_body: 1.5,
       digestion: 0.8,
-      iron: 0.7,
+      iron: 0.9,
     },
   },
   {
