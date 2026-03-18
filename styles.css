@@ -354,6 +354,8 @@ input:focus {
   padding: 14px;
   background: #fff7e5;
   border: 1px solid #ffe5aa;
+  display: grid;
+  justify-items: start;
 }
 
 .main-type-label {
@@ -361,11 +363,21 @@ input:focus {
   font-size: 13px;
 }
 
+.main-type-image {
+  margin-top: 10px;
+  width: min(100%, 220px);
+  height: auto;
+  display: block;
+  justify-self: center;
+}
+
 .main-type-value {
-  margin-top: 4px;
+  margin-top: 8px;
   font-size: 19px;
   font-weight: 700;
   color: #704a00;
+  justify-self: center;
+  text-align: center;
 }
 
 .radar-wrap {
@@ -510,6 +522,14 @@ input:focus {
 
   .card-title {
     font-size: 20px;
+  }
+
+  .main-type {
+    padding: 12px;
+  }
+
+  .main-type-image {
+    width: min(100%, 180px);
   }
 
 }

@@ -140,6 +140,7 @@ const TYPE_CONFIG = [
   {
     id: "carb",
     title: "糖質太りタイプ",
+    image: "image/toshitsu.png",
     weights: {
       carb: 1.4,
       glucose: 1.2,
@@ -149,6 +150,7 @@ const TYPE_CONFIG = [
   {
     id: "lipid",
     title: "脂質太りタイプ",
+    image: "image/shishitsu.png",
     weights: {
       lipid: 1.5,
       digestion: 1,
@@ -158,6 +160,7 @@ const TYPE_CONFIG = [
   {
     id: "metabolism",
     title: "代謝太りタイプ",
+    image: "image/taisha.png",
     weights: {
       metabolism_low: 1.5,
       metabolism_body: 1.0,
@@ -167,6 +170,7 @@ const TYPE_CONFIG = [
   {
     id: "swelling",
     title: "むくみ太りタイプ",
+    image: "image/mukumi.png",
     weights: {
       metabolism_body: 1.5,
       digestion: 0.8,
@@ -176,6 +180,7 @@ const TYPE_CONFIG = [
   {
     id: "stress",
     title: "ストレス太りタイプ",
+    image: "image/stress.png",
     weights: {
       fatigue: 1.4,
       glucose: 1,
@@ -559,12 +564,14 @@ function buildReport() {
 
   const status = evaluateFoundationStatus(foundationResults, totalWeightedScore);
   const hasClearTypeSignal = totalSelectedCount > 0 && typeResults[mainTypeIndex].rawScore > 0;
+  const mainTypeConfig = hasClearTypeSignal ? TYPE_CONFIG[mainTypeIndex] : null;
 
   return {
     userLine: `${appState.form.name.trim()} 様 (${appState.form.age}歳 / ${appState.form.gender})`,
     typeResults,
     bodyScores,
-    mainType: hasClearTypeSignal ? TYPE_CONFIG[mainTypeIndex].title : NEUTRAL_MAIN_TYPE,
+    mainType: mainTypeConfig ? mainTypeConfig.title : NEUTRAL_MAIN_TYPE,
+    mainTypeImage: mainTypeConfig ? mainTypeConfig.image : "",
     statusMessage: status.statusMessage,
     statusClass: status.statusClass,
     statusIcon: status.statusIcon,
@@ -655,6 +662,9 @@ function buildRadarSvg(labels, scores, maxScore) {
 
 function renderResult() {
   const report = appState.report;
+  const mainTypeImageMarkup = report.mainTypeImage
+    ? `<img class="main-type-image" src="${report.mainTypeImage}" alt="${report.mainType}" />`
+    : "";
 
   const typeScoresMarkup = typeLabels
     .map(
@@ -723,6 +733,7 @@ function renderResult() {
       <div class="score-list">${typeScoresMarkup}</div>
       <div class="main-type">
         <div class="main-type-label">あなたのメインタイプ</div>
+        ${mainTypeImageMarkup}
         <div class="main-type-value">${report.mainType}</div>
       </div>
     </section>
