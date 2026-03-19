@@ -138,54 +138,44 @@ const RESULT_CONFIG = {
 
 const TYPE_CONFIG = [
   {
-    id: "carb",
-    title: "糖質太りタイプ",
-    image: "image/toshitsu.png",
-    weights: {
-      carb: 1.4,
-      glucose: 1.2,
-      iron: 0.4,
-    },
+    id: "digestion",
+    title: "【ためこみ太り】消化力低下タイプ",
+    shortTitle: "消化力低下",
+    image: "image/消化力低下.png",
+    description:
+      "あなたは「ためこみ太り」タイプです。腸の消化力が落ちていて、老廃物や余分なものを体にためやすい状態。まず「出す」ことを整えるのが、痩せへの近道です。",
   },
   {
-    id: "lipid",
-    title: "脂質太りタイプ",
-    image: "image/shishitsu.png",
-    weights: {
-      lipid: 1.5,
-      digestion: 1,
-      metabolism_body: 0.3,
-    },
+    id: "glucose",
+    title: "【食べ方太り】食後高血糖タイプ",
+    shortTitle: "食後高血糖",
+    image: "image/食後高血糖.png",
+    description:
+      "あなたは「食べ方太り」タイプです。食後に血糖値が急上昇しやすく、脂肪がつきやすい体のしくみになっています。食べる内容より「食べ方」を変えるだけで変わります。",
   },
   {
-    id: "metabolism",
-    title: "代謝太りタイプ",
-    image: "image/taisha.png",
-    weights: {
-      metabolism_low: 1.5,
-      metabolism_body: 1.0,
-      protein: 0.6,
-    },
+    id: "fatigue",
+    title: "【疲れ太り】慢性疲労タイプ",
+    shortTitle: "慢性疲労",
+    image: "image/慢性疲労.png",
+    description:
+      "あなたは「疲れ太り」タイプです。慢性的な疲労で体のエネルギー代謝が乱れ、太りやすくなっています。頑張っているのに痩せない…それ、疲れのせいかもしれません。",
   },
   {
-    id: "swelling",
-    title: "むくみ太りタイプ",
-    image: "image/mukumi.png",
-    weights: {
-      metabolism_body: 1.5,
-      digestion: 0.8,
-      iron: 0.9,
-    },
+    id: "iron",
+    title: "【貧血太り】鉄欠乏貧血タイプ",
+    shortTitle: "鉄欠乏",
+    image: "image/鉄欠乏.png",
+    description:
+      "あなたは「貧血太り」タイプです。鉄が不足すると全身に酸素が届きにくくなり、代謝がぐっと落ちます。自覚がなくても「かくれ貧血」が原因のことがよくあります。",
   },
   {
-    id: "stress",
-    title: "ストレス太りタイプ",
-    image: "image/stress.png",
-    weights: {
-      fatigue: 1.4,
-      glucose: 1,
-      digestion: 0.4,
-    },
+    id: "metabolism_body",
+    title: "【冷え太り】基礎代謝低下タイプ",
+    shortTitle: "基礎代謝低下",
+    image: "image/基礎代謝低下.png",
+    description:
+      "あなたは「冷え太り」タイプです。基礎代謝が低下して体が冷えやすく、脂肪を燃やしにくい体になっています。食べる量を減らしても痩せにくいのは、これが原因かも。",
   },
 ];
 
@@ -541,17 +531,15 @@ function buildReport() {
   });
   const bodyScores = foundationResults.map((item) => item.score);
   const totalWeightedScore = foundationResults.reduce((sum, item) => sum + item.weightedScore, 0);
+  const foundationResultMap = Object.fromEntries(foundationResults.map((item) => [item.id, item]));
 
   const typeResults = TYPE_CONFIG.map((item) => {
-    const rawScore = Object.entries(item.weights).reduce((sum, [key, weight]) => {
-      return sum + (answerCounts[key] ?? 0) * weight;
-    }, 0);
-    const maxRawScore = Object.values(item.weights).reduce((sum, weight) => sum + weight * 5, 0);
+    const matchedResult = foundationResultMap[item.id];
     return {
       id: item.id,
       title: item.title,
-      rawScore,
-      score: Math.max(0, Math.min(5, Math.round((rawScore / maxRawScore) * 5))),
+      rawScore: matchedResult ? matchedResult.score : 0,
+      score: matchedResult ? matchedResult.score : 0,
     };
   });
 
@@ -572,6 +560,7 @@ function buildReport() {
     bodyScores,
     mainType: mainTypeConfig ? mainTypeConfig.title : NEUTRAL_MAIN_TYPE,
     mainTypeImage: mainTypeConfig ? mainTypeConfig.image : "",
+    mainTypeDescription: mainTypeConfig ? mainTypeConfig.description : "",
     statusMessage: status.statusMessage,
     statusClass: status.statusClass,
     statusIcon: status.statusIcon,
@@ -665,6 +654,9 @@ function renderResult() {
   const mainTypeImageMarkup = report.mainTypeImage
     ? `<img class="main-type-image" src="${report.mainTypeImage}" alt="${report.mainType}" />`
     : "";
+  const mainTypeDescriptionMarkup = report.mainTypeDescription
+    ? `<p class="main-type-description">${report.mainTypeDescription}</p>`
+    : "";
 
   const typeScoresMarkup = typeLabels
     .map(
@@ -735,6 +727,7 @@ function renderResult() {
         <div class="main-type-label">あなたのメインタイプ</div>
         ${mainTypeImageMarkup}
         <div class="main-type-value">${report.mainType}</div>
+        ${mainTypeDescriptionMarkup}
       </div>
     </section>
 
