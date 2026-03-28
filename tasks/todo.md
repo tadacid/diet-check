@@ -171,3 +171,16 @@
 - `.htaccess` を更新し、`/type-check` とその配下だけは除外し、それ以外を `https://c-grace.com/` へ転送する設定に変更した
 - `https://c-grace.co.jp/type-check/` と `https://c-grace.co.jp/type-check/app.js` は `200` を確認した
 - `https://c-grace.co.jp/` は `https://c-grace.com/`、`https://c-grace.co.jp/company` は `https://c-grace.com/company` へ `302` 転送されることを確認した
+
+## 2026-03-29 本番 type-check Basic認証追加
+
+- [x] テストサイトと同じ Basic認証の置き方を確認する
+- [x] 本番の `type-check` に認証ファイルを置く
+- [x] 認証後に `200` で開くことを確認する
+
+## 本番 type-check Basic認証追加レビュー
+
+- テストサイトの `diet-check` と同じ `Member Site` の入室制限を本番 `type-check` に追加した
+- `AuthUserFile` は本番の `htpasswd/diet-check/.htpasswd` を参照する形にそろえた
+- 認証ファイルは最初 `600` だと本番側で `500` になったため、`644` にして読み取りできるようにした
+- `curl -I https://c-grace.co.jp/type-check/` で `401` を確認し、`curl -I -u diet:check https://c-grace.co.jp/type-check/` で `200` を確認した
