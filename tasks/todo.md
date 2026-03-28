@@ -157,3 +157,17 @@
 - メインタイプ画像も新しい5タイプに対応する `消化力低下 / 食後高血糖 / 慢性疲労 / 鉄欠乏 / 基礎代謝低下` の画像へ切り替えた
 - `node --check app.js` で文法エラーがないことを確認した
 - ローカル確認で5タイプそれぞれと未回答の中立表示を通し、タイトル・画像・説明文の対応が正しいことを確認した
+
+## 2026-03-29 c-grace.co.jp 転送設定修正
+
+- [x] 現在の `.htaccess` の転送設定を確認する
+- [x] `type-check` を除外する転送設定へ修正する
+- [x] `type-check` は開き、それ以外は `c-grace.com` に飛ぶことを確認する
+
+## c-grace.co.jp 転送設定修正レビュー
+
+- 本番サーバーの `/home/cgace001/c-grace.co.jp/public_html/.htaccess` を確認し、従来は全アクセスを `https://c-grace.com/` へ送る単純な設定だった
+- 変更前の控えを `.htaccess.bak-type-check-20260329` として残した
+- `.htaccess` を更新し、`/type-check` とその配下だけは除外し、それ以外を `https://c-grace.com/` へ転送する設定に変更した
+- `https://c-grace.co.jp/type-check/` と `https://c-grace.co.jp/type-check/app.js` は `200` を確認した
+- `https://c-grace.co.jp/` は `https://c-grace.com/`、`https://c-grace.co.jp/company` は `https://c-grace.com/company` へ `302` 転送されることを確認した
