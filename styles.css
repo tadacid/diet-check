@@ -510,6 +510,13 @@ input:focus {
   font-weight: 700;
 }
 
+.action-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
 .toast {
   position: fixed;
   top: 18px;

@@ -712,6 +712,7 @@ function renderResult() {
       : "";
 
   const adviceButtonText = appState.adviceRequested ? "アドバイス希望登録済み" : "無料でアドバイスを受ける";
+  const guideLink = "https://c-grace.com/pages/%E4%BD%93%E8%B3%AA%E5%88%A5%E8%A7%A3%E8%AA%AC#";
 
   resultEl.innerHTML = `
     <header class="report-head">
@@ -746,6 +747,7 @@ function renderResult() {
       <p class="cta-copy">あなたの診断結果をもとに<br />土井千春が"今の状態に合ったアドバイス"をお届けします</p>
       <div class="cta-buttons">
         <button type="button" class="action-btn" id="advice-btn" ${appState.adviceRequested ? "disabled" : ""}>${adviceButtonText}</button>
+        <a class="action-btn action-link" href="${guideLink}" target="_blank" rel="noopener noreferrer">体質別解説を見る</a>
       </div>
     </section>
   `;
