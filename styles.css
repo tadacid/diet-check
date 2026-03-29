@@ -362,6 +362,80 @@ input:focus {
   gap: 8px;
 }
 
+.combination-block {
+  margin-top: 14px;
+  border-radius: 20px;
+  padding: 14px;
+  background: linear-gradient(180deg, #fffaf4, #f7efe5);
+  border: 1px solid rgba(223, 212, 198, 0.8);
+}
+
+.combination-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.combination-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #6e5742;
+  letter-spacing: 0.06em;
+}
+
+.combination-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #bb925f;
+  color: #fffdf8;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.combination-grid {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.combination-card {
+  border-radius: 16px;
+  padding: 14px 12px;
+  background: #fff;
+  border: 1px solid rgba(223, 212, 198, 0.82);
+  display: grid;
+  gap: 6px;
+}
+
+.combination-label {
+  font-size: 12px;
+  color: #8a7562;
+}
+
+.combination-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #5d4630;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.combination-cross {
+  display: grid;
+  place-items: center;
+  color: #b28a5f;
+  font-size: 24px;
+  font-weight: 700;
+}
+
 .score-item {
   display: flex;
   justify-content: space-between;
@@ -564,6 +638,15 @@ input:focus {
   }
 
   .card-title {
+    font-size: 20px;
+  }
+
+  .combination-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .combination-cross {
+    min-height: 18px;
     font-size: 20px;
   }
 

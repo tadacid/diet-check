@@ -140,6 +140,7 @@ const TYPE_CONFIG = [
   {
     id: "digestion",
     title: "【ためこみ太り】消化力低下タイプ",
+    cardLabel: "ためこみ太り",
     shortTitle: "消化力低下",
     image: "image/消化力低下.png",
     description:
@@ -148,6 +149,7 @@ const TYPE_CONFIG = [
   {
     id: "glucose",
     title: "【食べ方太り】食後高血糖タイプ",
+    cardLabel: "食べ方太り",
     shortTitle: "食後高血糖",
     image: "image/食後高血糖.png",
     description:
@@ -156,6 +158,7 @@ const TYPE_CONFIG = [
   {
     id: "fatigue",
     title: "【疲れ太り】慢性疲労タイプ",
+    cardLabel: "疲れ太り",
     shortTitle: "慢性疲労",
     image: "image/慢性疲労.png",
     description:
@@ -164,6 +167,7 @@ const TYPE_CONFIG = [
   {
     id: "iron",
     title: "【貧血太り】鉄欠乏貧血タイプ",
+    cardLabel: "貧血太り",
     shortTitle: "鉄欠乏",
     image: "image/鉄欠乏.png",
     description:
@@ -172,6 +176,7 @@ const TYPE_CONFIG = [
   {
     id: "metabolism_body",
     title: "【冷え太り】基礎代謝低下タイプ",
+    cardLabel: "冷え太り",
     shortTitle: "基礎代謝低下",
     image: "image/基礎代謝低下.png",
     description:
@@ -179,7 +184,23 @@ const TYPE_CONFIG = [
   },
 ];
 
+const GENE_TYPE_CONFIG = [
+  {
+    id: "carb",
+    cardLabel: "糖質太り",
+  },
+  {
+    id: "lipid",
+    cardLabel: "脂質太り",
+  },
+  {
+    id: "metabolism_low",
+    cardLabel: "代謝太り",
+  },
+];
+
 const NEUTRAL_MAIN_TYPE = "はっきりした偏りは見られません";
+const NEUTRAL_COMBINATION_LABEL = "傾向なし";
 
 const geneQuestions = questions.filter((item) => item.type === "genetic");
 const foundationQuestions = questions.filter((item) => item.type === "foundation");
@@ -517,6 +538,12 @@ function buildReport() {
     questions.map((item, idx) => [item.id, appState.answers[idx].size])
   );
   const totalSelectedCount = Object.values(answerCounts).reduce((sum, count) => sum + count, 0);
+  const geneResults = geneQuestions.map((item, idx) => ({
+    id: item.id,
+    title: item.title,
+    score: appState.answers[idx].size,
+    max: item.choices.length,
+  }));
   const foundationResults = foundationQuestions.map((item, idx) => {
     const answerIndex = idx + geneQuestions.length;
     const score = appState.answers[answerIndex].size;
@@ -543,6 +570,13 @@ function buildReport() {
     };
   });
 
+  let mainGeneIndex = 0;
+  geneResults.forEach((item, idx) => {
+    if (item.score > geneResults[mainGeneIndex].score) {
+      mainGeneIndex = idx;
+    }
+  });
+
   let mainTypeIndex = 0;
   typeResults.forEach((item, idx) => {
     if (item.rawScore > typeResults[mainTypeIndex].rawScore) {
@@ -551,13 +585,18 @@ function buildReport() {
   });
 
   const status = evaluateFoundationStatus(foundationResults, totalWeightedScore);
+  const hasClearGeneSignal = geneResults[mainGeneIndex].score > 0;
+  const mainGeneConfig = hasClearGeneSignal ? GENE_TYPE_CONFIG[mainGeneIndex] : null;
   const hasClearTypeSignal = totalSelectedCount > 0 && typeResults[mainTypeIndex].rawScore > 0;
   const mainTypeConfig = hasClearTypeSignal ? TYPE_CONFIG[mainTypeIndex] : null;
 
   return {
     userLine: `${appState.form.name.trim()} 様 (${appState.form.age}歳 / ${appState.form.gender})`,
+    geneResults,
     typeResults,
     bodyScores,
+    combinationGeneType: mainGeneConfig ? mainGeneConfig.cardLabel : NEUTRAL_COMBINATION_LABEL,
+    combinationBodyType: mainTypeConfig ? mainTypeConfig.cardLabel : NEUTRAL_COMBINATION_LABEL,
     mainType: mainTypeConfig ? mainTypeConfig.title : NEUTRAL_MAIN_TYPE,
     mainTypeImage: mainTypeConfig ? mainTypeConfig.image : "",
     mainTypeDescription: mainTypeConfig ? mainTypeConfig.description : "",
@@ -669,6 +708,26 @@ function renderResult() {
     )
     .join("");
 
+  const combinationMarkup = `
+    <div class="combination-block">
+      <div class="combination-head">
+        <div class="combination-title">あなたのタイプ診断</div>
+        <span class="combination-badge">NEW</span>
+      </div>
+      <div class="combination-grid">
+        <div class="combination-card">
+          <div class="combination-label">遺伝子タイプ</div>
+          <div class="combination-value">${report.combinationGeneType}</div>
+        </div>
+        <div class="combination-cross" aria-hidden="true">×</div>
+        <div class="combination-card">
+          <div class="combination-label">体質タイプ</div>
+          <div class="combination-value">${report.combinationBodyType}</div>
+        </div>
+      </div>
+    </div>
+  `;
+
   const criticalItemsMarkup = report.criticalAreas
     .map((item) => `<div>${item.title} (${item.score}/5)</div>`)
     .join("");
@@ -723,6 +782,7 @@ function renderResult() {
 
     <section class="card">
       <h3 class="card-title">🧬 体質タイプ傾向</h3>
+      ${combinationMarkup}
       <div class="score-list">${typeScoresMarkup}</div>
       <div class="main-type">
         <div class="main-type-label">あなたのメインタイプ</div>
