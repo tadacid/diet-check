@@ -166,7 +166,7 @@ const TYPE_CONFIG = [
   },
   {
     id: "iron",
-    title: "【貧血太り】鉄欠乏貧血タイプ",
+    title: "【貧血太り】鉄欠乏性貧血タイプ",
     cardLabel: "貧血太り",
     shortTitle: "鉄欠乏",
     image: "image/鉄欠乏.png",
@@ -804,7 +804,7 @@ function renderResult() {
     </section>
 
     <section class="cta-box">
-      <p class="cta-copy">あなたの診断結果をもとに<br />土井千春が"今の状態に合ったアドバイス"をお届けします</p>
+      <p class="cta-copy">あなたの診断結果をもとに<br />今の体質タイプに合った解説を確認できます</p>
       <div class="cta-buttons">
         <button type="button" class="action-btn" id="advice-btn" ${appState.adviceRequested ? "disabled" : ""}>${adviceButtonText}</button>
         <a class="action-btn action-link" href="${guideLink}" target="_blank" rel="noopener noreferrer">体質別解説を見る</a>
