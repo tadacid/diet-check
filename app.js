@@ -142,7 +142,7 @@ const TYPE_CONFIG = [
     title: "【ためこみ太り】消化力低下タイプ",
     cardLabel: "ためこみ太り",
     shortTitle: "消化力低下",
-    image: "image/消化力低下.png",
+    image: "image/digestion.png",
     description:
       "あなたは「ためこみ太り」タイプです。腸の消化力が落ちていて、老廃物や余分なものを体にためやすい状態。まず「出す」ことを整えるのが、痩せへの近道です。",
   },
@@ -151,7 +151,7 @@ const TYPE_CONFIG = [
     title: "【食べ方太り】食後高血糖タイプ",
     cardLabel: "食べ方太り",
     shortTitle: "食後高血糖",
-    image: "image/食後高血糖.png",
+    image: "image/glucose.png",
     description:
       "あなたは「食べ方太り」タイプです。食後に血糖値が急上昇しやすく、脂肪がつきやすい体のしくみになっています。食べる内容より「食べ方」を変えるだけで変わります。",
   },
@@ -160,7 +160,7 @@ const TYPE_CONFIG = [
     title: "【疲れ太り】慢性疲労タイプ",
     cardLabel: "疲れ太り",
     shortTitle: "慢性疲労",
-    image: "image/慢性疲労.png",
+    image: "image/fatigue.png",
     description:
       "あなたは「疲れ太り」タイプです。慢性的な疲労で体のエネルギー代謝が乱れ、太りやすくなっています。頑張っているのに痩せない…それ、疲れのせいかもしれません。",
   },
@@ -169,7 +169,7 @@ const TYPE_CONFIG = [
     title: "【貧血太り】鉄欠乏性貧血タイプ",
     cardLabel: "貧血太り",
     shortTitle: "鉄欠乏",
-    image: "image/鉄欠乏.png",
+    image: "image/iron.png",
     description:
       "あなたは「貧血太り」タイプです。鉄が不足すると全身に酸素が届きにくくなり、代謝がぐっと落ちます。自覚がなくても「かくれ貧血」が原因のことがよくあります。",
   },
@@ -178,7 +178,7 @@ const TYPE_CONFIG = [
     title: "【冷え太り】基礎代謝低下タイプ",
     cardLabel: "冷え太り",
     shortTitle: "基礎代謝低下",
-    image: "image/基礎代謝低下.png",
+    image: "image/metabolism.png",
     description:
       "あなたは「冷え太り」タイプです。基礎代謝が低下して体が冷えやすく、脂肪を燃やしにくい体になっています。食べる量を減らしても痩せにくいのは、これが原因かも。",
   },
